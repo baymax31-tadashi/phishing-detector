@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phishing URL Detector</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 30px;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 8px;
+        }
+        input[type="file"] {
+            margin-left: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        img.screenshot {
+            margin-top: 10px;
+            max-width: 400px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Phishing URL Detector</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="url" placeholder="Enter URL" required>
+        <input type="file" name="screenshot" accept="image/*">
+        <button type="submit">Check</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <p><strong>Prediction:</strong> {{ result }}</p>
+        <p><strong>Confidence:</strong> {{ confidence }}%</p>
+    </div>
+    {% endif %}
+
+    <h2>History</h2>
+    <ul>
+        {% for entry in log %}
+        <li>
+            <strong>{{ entry.url }}</strong> — {{ entry.prediction }} ({{ entry.confidence }}%)
+            {% if entry.screenshot %}
+                <br>
+                <img class="screenshot" src="{{ '/' + entry.screenshot }}" alt="Screenshot">
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
