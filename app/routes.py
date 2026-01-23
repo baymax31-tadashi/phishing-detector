@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 
 bp = Blueprint("main", __name__)
 
-# In-memory log
+
 url_log = []
 
 @bp.route("/", methods=["GET", "POST"])
@@ -18,10 +18,10 @@ def index():
         screenshot = request.files.get("screenshot")
 
         features = extract_features(url)
-        prediction, raw_confidence = predict_url(features)  # raw_confidence: float (0-1)
+        prediction, raw_confidence = predict_url(features)  
         confidence_percent = round(raw_confidence * 100, 2)
 
-        # Save screenshot if uploaded
+       
         screenshot_filename = None
         if screenshot and screenshot.filename:
             filename = secure_filename(screenshot.filename)
@@ -29,7 +29,7 @@ def index():
             os.makedirs(os.path.dirname(screenshot_filename), exist_ok=True)
             screenshot.save(screenshot_filename)
 
-        # Add to history
+     
         url_log.insert(0, {
             "url": url,
             "prediction": prediction,
@@ -37,7 +37,7 @@ def index():
             "screenshot": screenshot_filename
         })
 
-        # Limit log to latest 10 entries
+     
         if len(url_log) > 10:
             url_log.pop()
 
